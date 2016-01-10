@@ -1,0 +1,135 @@
+<html>
+
+<head>
+    <title>Node Authentication</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+    <style>
+        body {
+            padding-top: 80px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="page-header text-center">
+            <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+            <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+        </div>
+
+        <div class="row">
+            <!-- LOCAL INFORMATION -->
+            <div class="col-sm-6">
+                <div class="row">
+
+                    <div class="well">
+                        <h3><span class="fa fa-user"></span> Local</h3>
+                        <p>
+                            <strong>id</strong>:
+                            <%= user._id %>
+                                <br>
+                                <strong>email</strong>:
+                                <%= user.local.email %>
+                                    <br>
+                                    <strong>password</strong>:
+                                    <%= user.local.password %>
+                        </p>
+                    </div>
+                </div>
+                <!-- PARAMETERS OF THE CAR in USER-->
+                <div class="row">
+                    <div class="well">
+                        <h3>Parameters attached to the user in the database (Does not work yet)</h3>
+                        <p>
+                            <strong>Temperature of the car</strong>:
+                            <%= user.local.temperature %>
+
+                                <br>
+                                <strong>Tyre pressure 1</strong>:
+                                <%= user.local.t1 %>
+                                    <br>
+                                    <strong>Tyre pressure 2</strong>:
+                                    <%= user.local.t2 %>
+                                        <br>
+                                        <strong>Tyre pressure 3</strong>:
+                                        <%= user.local.t3 %>
+                                            <br>
+                                            <strong>Tyre pressure 4</strong>:
+                                            <%= user.local.t4 %>
+                                                <br>
+                                                <strong>Fuel</strong>:
+                                                <%= user.local.fuel %>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="well">
+                    <h3>Panel of the car</h3>
+                    <p>
+                        <strong>Temperature of the car</strong>:
+                        <div id="temperature">20</div>
+                        <br>
+                        <strong>Tyre pressure 1</strong>:
+                        <div id="t1">35</div>
+                        <br>
+                        <strong>Tyre pressure 2</strong>:
+                        <div id="t2">35</div>
+                        <br>
+                        <strong>Tyre pressure 3</strong>:
+                        <div id="t3">35</div>
+                        <br>
+                        <strong>Tyre pressure 4</strong>:
+                        <div id="t4">35</div>
+                        <br>
+                        <strong>Fuel</strong>:
+                        <div id="fuel">100</div>
+                        <br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="http://localhost:80/socket.io/socket.io.js"></script>
+    <script>
+        // Connexion à socket.io
+        var socket = io.connect('http://localhost:80');
+
+        // On affiche une boîte de dialogue quand le serveur nous envoie un "message"
+        socket.on('message', function (message) {
+            alert(message);
+        });
+
+        socket.on('result', function (message) {
+            window.location = message;
+        });
+
+        socket.on('pushtemp', function (data) {
+            document.getElementById('temperature').innerHTML = data + '°C';
+        });
+
+        socket.on('pusht1', function (data) {
+            document.getElementById('t1').innerHTML = data + ' PSI';
+        });
+
+        socket.on('pusht2', function (data) {
+            document.getElementById('t2').innerHTML = data + ' PSI';
+        });
+
+        socket.on('pusht3', function (data) {
+            document.getElementById('t3').innerHTML = data + ' PSI';
+        });
+
+        socket.on('pusht4', function (data) {
+            document.getElementById('t4').innerHTML = data + ' PSI';
+        });
+
+        socket.on('pushfuel', function (data) {
+            document.getElementById('fuel').innerHTML = data + '%';
+        });
+    </script>
+</body>
+
+</html>
